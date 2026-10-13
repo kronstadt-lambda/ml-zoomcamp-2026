@@ -1,25 +1,30 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
+*$py.class
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
+
+# Test and notebook caches
+.pytest_cache/
+.ipynb_checkpoints/
 
 # Virtual environments
-.venv
+.venv/
 
-# Docs and resources
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+
+# Non-redistributable local resources
 books/
 
-# ia context (only for generate readmes.md)
+# .ia (only assistant for readme.md)
+AGENTS.md
 .ia/
-
-# modules
-modules/
-
-# github
-.github/
 
 # data
 data/*.csv
