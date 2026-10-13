@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Docs and resources
+books/
+
+# ia context (only for generate readmes.md)
+.ia/
+
+# modules
+modules/
+
+# github
+.github/
+
+# data
+data/*.csv
+data/*.json
