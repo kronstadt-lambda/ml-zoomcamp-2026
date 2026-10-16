@@ -21,6 +21,7 @@ The project uses Python, [`uv`](https://docs.astral.sh/uv/), and a `src` layout.
 | Homework | Module | Documentation |
 |---|---|---|
 | Homework 01 | Introduction to Machine Learning | [README](src/mlzoomcamp/homework_01/README.md) |
+| Homework 02 | Machine Learning for Regression | [README](src/mlzoomcamp/homework_02/README.md) |
 
 ## Setup
 

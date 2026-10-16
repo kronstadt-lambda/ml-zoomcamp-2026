@@ -29,3 +29,6 @@ AGENTS.md
 # data
 data/*.csv
 data/*.json
+
+# modules
+modules/
