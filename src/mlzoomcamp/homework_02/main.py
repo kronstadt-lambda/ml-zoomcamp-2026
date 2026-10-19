@@ -5,7 +5,7 @@ Script en python para poder resolver el Homework01
 # %%
 import pandas as pd
 from matplotlib import pyplot as plt
-from mlzoomcamp.config import DATA_DIR
+from mlzoomcamp.core.config import DATA_DIR
 from mlzoomcamp.homework_02.plots import (
     plot_distribution,
     plot_missing_values,

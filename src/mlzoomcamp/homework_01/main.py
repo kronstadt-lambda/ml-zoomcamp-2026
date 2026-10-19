@@ -4,7 +4,7 @@ Script en python para poder resolver el Homework01
 """
 # %%
 import pandas as pd
-from mlzoomcamp.config import DATA_DIR
+from mlzoomcamp.core.config import DATA_DIR
 import numpy as np
 
 pd.set_option("display.width", 140)
