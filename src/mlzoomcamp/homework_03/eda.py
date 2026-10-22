@@ -1,10 +1,10 @@
-"""Pure exploratory-data-analysis summaries without printing or plotting."""
+"""Exploratory-data-analysis summaries used by Homework 03."""
 
 from collections.abc import Sequence
 
 import pandas as pd
 
-from mlzoomcamp.core.data import categorical_columns, require_columns
+from mlzoomcamp.homework_03.data import categorical_columns, require_columns
 
 
 def column_overview(df: pd.DataFrame) -> pd.DataFrame:
@@ -20,6 +20,11 @@ def column_overview(df: pd.DataFrame) -> pd.DataFrame:
             "missing_count": missing,
             "missing_ratio": missing / total_rows if total_rows else 0.0,
             "unique_count": df.nunique(dropna=True),
+            "unique_ratio": (
+                df.nunique(dropna=True) / total_rows
+                if total_rows
+                else 0.0
+            ),
         }
     )
 
