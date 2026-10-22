@@ -1,7 +1,5 @@
 
 # %%
-from pathlib import Path
-
 import pandas as pd
 
 from mlzoomcamp.homework_03.feature_engineering import (
@@ -11,6 +9,7 @@ from matplotlib import pyplot as plt
 
 from sklearn.model_selection import train_test_split
 
+from mlzoomcamp.config import DATA_DIR
 from mlzoomcamp.homework_03.data import (
     missing_value_counts,
     split_features_target,
@@ -40,7 +39,6 @@ from mlzoomcamp.homework_03.experiments import (
 pd.set_option("display.width", 1000)
 pd.set_option("display.expand_frame_repr", False)
 # %%
-DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 DATASET_PATH = DATA_DIR / "course_lead_scoring_2026.csv"
 df = pd.read_csv(DATASET_PATH)
 

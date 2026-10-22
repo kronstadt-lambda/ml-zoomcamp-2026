@@ -5,14 +5,14 @@ Script en python para poder resolver el Homework01
 # %%
 import numpy as np
 import pandas as pd
-from pathlib import Path
+
+from mlzoomcamp.config import DATA_DIR
 
 pd.set_option("display.width", 140)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.expand_frame_repr", False)
 
-DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 DATASET_PATH = DATA_DIR / "car_fuel_efficiency_2026.csv"
 
 # %%

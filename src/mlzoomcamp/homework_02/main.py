@@ -5,7 +5,7 @@ Script en python para poder resolver el Homework01
 # %%
 import pandas as pd
 from matplotlib import pyplot as plt
-from pathlib import Path
+from mlzoomcamp.config import DATA_DIR
 from mlzoomcamp.homework_02.plots import (
     plot_distribution,
     plot_missing_values,
@@ -30,7 +30,6 @@ from mlzoomcamp.homework_02.experiments import (
 )
 # %%
 # EDA
-DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 DATASET_PATH = DATA_DIR / "car_fuel_efficiency_2026.csv"
 df = pd.read_csv(DATASET_PATH)
 
