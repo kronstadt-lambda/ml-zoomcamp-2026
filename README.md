@@ -23,6 +23,7 @@ The project uses Python, [`uv`](https://docs.astral.sh/uv/), and a `src` layout.
 | Homework 02 | Machine Learning for Regression | [README](src/mlzoomcamp/homework_02/README.md) |
 | Homework 03 | Machine Learning for Classification | [README](src/mlzoomcamp/homework_03/README.md) |
 | Homework 04 | Evaluation Metrics for Classification | [README](src/mlzoomcamp/homework_04/README.md) |
+| Homework 05 | Deploying Machine Learning Models | [README](src/mlzoomcamp/homework_05/README.md) |
 
 ## Setup
 
