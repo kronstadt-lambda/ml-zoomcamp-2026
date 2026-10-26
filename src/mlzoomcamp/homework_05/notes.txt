@@ -1,0 +1,481 @@
+Homework 05 — Deploying Machine Learning Models
+ML Zoomcamp 2026
+
+Repositorio: mlzoomcamp
+Directorio de trabajo: homework_05
+Fecha de inicio: 25-10-26
+
+==================================================
+0. PREPARACIÓN DEL ENTORNO
+==================================================
+
+Directorio utilizado:
+$ cd /home/klambda/Documents/courses/datatalks/mlzoomcamp/src/mlzoomcamp/homework_05
+
+Comandos ejecutados:
+
+$ uv python install 3.11.15
+Salida:
+Installed Python 3.11.15 in 4.04s
+ + cpython-3.11.15-linux-x86_64-gnu (python3.11)
+
+$ uv sync --locked
+Salida:
+Using CPython 3.11.15 interpreter at: /home/klambda/.local/bin/python3.11
+Creating virtual environment at: .venv
+Resolved 19 packages in 0.66ms
+Prepared 18 packages in 5.73s
+Installed 18 packages in 130ms
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + click==8.5.0
+ + cloudpickle==3.1.2
+ + fastapi==0.119.1
+ + h11==0.16.0
+ + idna==3.19
+ + joblib==1.6.0
+ + numpy==2.3.3
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + scikit-learn==1.7.2
+ + scipy==1.17.1
+ + starlette==0.48.0
+ + threadpoolctl==3.6.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uvicorn==0.38.0
+
+$ uv run python --version
+Salida:
+Python 3.11.15
+
+$ uv run python -c "import sklearn; print(sklearn.__version__)"
+Salida:
+1.7.2 0.119.1
+
+$ sha256sum pipeline.bin
+Salida:
+1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1  pipeline.bin
+
+Checksum esperado:
+1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1
+
+$ uv run python smoke_test.py
+Salida:
+{'conversion_probability': 0.769799, 'conversion': True}
+
+Estado de preparación:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+QUESTION 1 — ENVIRONMENT CHECK
+==================================================
+
+Enunciado:
+Registrar la versión local de uv.
+
+Concepto:
+Verificación del entorno de desarrollo.
+
+Directorio:
+src/mlzoomcamp/homework_05/
+
+Comando:
+
+$ uv --version
+
+Salida observada:
+uv 0.13.5 (x86_64-unknown-linux-gnu)
+
+Respuesta registrada:
+uv versión 0.13.5
+
+Interpretación:
+Esta versión describe la herramienta instalada localmente.
+No es una propiedad del modelo.
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+QUESTION 2 — LOCKED DEPENDENCY
+==================================================
+
+Enunciado:
+Identificar la versión de Scikit-Learn utilizada por el entorno
+bloqueado de la cohorte 2026.
+
+Archivos revisados:
+- pyproject.toml
+- uv.lock
+
+Comandos utilizados:
+
+$ grep -n "scikit-learn" pyproject.toml
+Salida:
+9:    "scikit-learn==1.7.2",
+
+$ grep -n "scikit-learn" uv.lock
+Salida:
+99:    { name = "scikit-learn" },
+107:    { name = "scikit-learn", specifier = "==1.7.2" },
+191:name = "scikit-learn"
+
+Versión observada:
+1.7.2
+
+Opciones del enunciado:
+- 1.6.1
+- 1.7.2
+- 1.8.0
+- 2.0.0
+
+Respuesta registrada:
+1.7.2
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+QUESTION 3 — LOAD THE MODEL
+==================================================
+
+Enunciado:
+Cargar pipeline.bin mediante pickle y calcular predict_proba
+para el primer lead.
+
+Lead utilizado:
+{
+  "lead_source": "paid_ads",
+  "industry": "technology",
+  "employment_status": "employed",
+  "location": "north_america",
+  "number_of_courses_viewed": 2,
+  "annual_income": 79276.0,
+  "interaction_count": 4,
+  "lead_score": 0.41
+}
+
+Conceptos:
+- Pickle
+- Carga de artefactos
+- predict_proba
+- Probabilidad de conversión
+
+Script utilizado: q3.py
+
+Comando ejecutado:
+
+$ uv run python q3.py
+
+Salida completa:
+
+Probabilidad obtenida:
+0.533
+
+Probabilidad redondeada a tres decimales:
+0.533
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+QUESTION 4 — SERVE THE MODEL
+==================================================
+
+Enunciado:
+Ejecutar la API FastAPI y enviar el segundo lead al endpoint
+POST /predict.
+
+Conceptos:
+- FastAPI
+- Uvicorn
+- API HTTP
+- Serialización JSON
+
+Terminal 1 — servidor:
+
+$ uv run uvicorn predict:app --host 0.0.0.0 --port 9696
+
+Salida relevante:
+INFO:     Started server process [759325]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9696 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50324 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41086 - "POST /predict HTTP/1.1" 200 OK
+
+Terminal 2 — prueba de salud:
+
+$ curl -s http://localhost:9696/health
+
+Salida:
+{
+  "status": "ok",
+  "model_sha256": "1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1",
+  "feature_defaults_sha256": "1694f842b908fac9f53c0cc19be6d91f934befc63af23cc32fefafde69acd0cd"
+}
+
+Terminal 2 — petición de predicción:
+
+$ curl -s http://localhost:9696/predict \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "lead_source": "organic_search",
+    "industry": "technology",
+    "employment_status": "employed",
+    "location": "europe",
+    "number_of_courses_viewed": 4,
+    "annual_income": 80304.0,
+    "interaction_count": 7,
+    "lead_score": 0.74
+  }'
+
+Salida completa:
+{
+  "conversion_probability": 0.769799,
+  "conversion": true
+}
+
+conversion_probability obtenida:
+0.769799
+
+conversion obtenido:
+true
+
+Probabilidad redondeada a tres decimales:
+0.770
+
+Validaciones:
+[x] probability está entre 0 y 1
+[x] conversion es boolean
+[x] /health responde correctamente
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+CONTAINER — PREPARACIÓN
+==================================================
+
+Imagen construida:
+
+$ docker build -t zoomcamp-model:2026-hw5 .
+
+Salida relevante:
+Build completado correctamente.
+
+Evidencia relevante:
+- Imagen creada: zoomcamp-model:2026-hw5
+- Imagen base: python:3.11.15-slim-bookworm
+- Herramienta uv copiada desde: ghcr.io/astral-sh/uv:0.10.11
+- Dependencias instaladas con:
+  uv sync --locked --no-dev
+- Artefactos copiados a la imagen:
+  model.py, predict.py, feature_defaults.json,
+  model_metadata.json, pipeline.bin y q6_test.py
+
+Contenedor ejecutado:
+
+$ docker run --rm -p 9696:9696 zoomcamp-model:2026-hw5
+
+Salida relevante:
+INFO:     Started server process [1]
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9696
+
+Observaciones:
+- La imagen se construyó correctamente a partir del Dockerfile oficial.
+- El contenedor inició la API FastAPI correctamente.
+- El puerto 9696 del contenedor está publicado en el puerto 9696 local.
+- Aún falta validar /health y /predict contra el contenedor para completar Q6.
+
+==================================================
+QUESTION 5 — CONTAINER CONFIGURATION
+==================================================
+
+Enunciado:
+Identificar el tag de la imagen base de Python declarado
+en Dockerfile.
+
+Archivo revisado:
+Dockerfile
+
+Comando utilizado:
+
+$ grep -n "FROM" Dockerfile
+
+Evidencia observada durante la construcción:
+
+FROM docker.io/library/python:3.11.15-slim-bookworm
+
+Tag observado:
+python:3.11.15-slim-bookworm
+
+Respuesta final Q5:
+python:3.11.15-slim-bookworm
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+QUESTION 6 — RUN THE CONTAINER
+==================================================
+
+Enunciado:
+Ejecutar la misma solicitud de Q4 contra el contenedor Docker,
+verificar el endpoint /health y confirmar el checksum del modelo.
+
+Contenedor utilizado:
+zoomcamp-model:2026-hw5
+
+Comando ejecutado:
+
+$ uv run python q6_test.py
+
+Salida completa:
+
+{'conversion_probability': 0.769799, 'conversion': True}
+
+conversion_probability obtenida:
+0.769799
+
+Probabilidad redondeada a tres decimales:
+0.770
+
+conversion obtenida:
+True
+
+Prueba de salud:
+
+$ curl -s http://localhost:9696/health
+
+Salida:
+{
+  "status": "ok",
+  "model_sha256": "1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1",
+  "feature_defaults_sha256": "1694f842b908fac9f53c0cc19be6d91f934befc63af23cc32fefafde69acd0cd"
+}
+
+Checksum registrado en model_metadata.json:
+
+$ grep -n '"model_sha256"' model_metadata.json
+
+Salida:
+26:  "model_sha256": "1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1",
+
+Respuesta final Q6:
+0.770
+
+Validaciones:
+[x] La predicción coincide con Q4 dentro de la tolerancia
+[x] /health responde status ok
+[x] El checksum del contenedor coincide con model_metadata.json.
+[x] conversion_probability está entre 0 y 1.
+[x] conversion es booleano.
+[x] El contenedor expone correctamente el puerto 9696.
+
+Interpretación:
+El contenedor usa el artefacto pipeline.bin esperado y sirve la misma
+predicción de referencia que la API ejecutada localmente.
+
+Estado:
+[ ] Pendiente
+[x] Verificado
+
+
+==================================================
+RESUMEN FINAL
+==================================================
+
+| Pregunta | Respuesta | Evidencia | Estado |
+|----------|-----------|-----------|--------|
+| Q1 | uv 0.13.5 | `uv --version` | Verificado |
+| Q2 | 1.7.2 | `pyproject.toml` y `uv.lock` | Verificado |
+| Q3 | 0.533 | `uv run python q3.py` | Verificado |
+| Q4 | 0.770 | FastAPI local + `curl /predict` | Verificado |
+| Q5 | python:3.11.15-slim-bookworm | declaración `FROM` en Dockerfile | Verificado |
+| Q6 | 0.770 | Contenedor Docker + `q6_test.py` | Verificado |
+
+Comprobaciones adicionales:
+- Python utilizado: 3.11.15.
+- El checksum de `pipeline.bin` coincide con el valor oficial:
+  1646bbdcd38d4f044da6b630c5b332c93a314245a8c21929011c42de51f629f1
+- `smoke_test.py` se ejecutó correctamente.
+- La API local respondió correctamente en `/health` y `/predict`.
+- La API en Docker devolvió la misma predicción que la API local.
+- El checksum expuesto por el contenedor coincidió con `model_metadata.json`.
+
+==================================================
+APRENDIZAJES
+==================================================
+
+1. Un artefacto serializado con `pickle` puede cargarse para realizar
+   inferencia sin reentrenar el modelo; el pipeline encapsula las
+   transformaciones y el modelo entrenado.
+
+2. La normalización de datos sigue siendo importante antes de inferir:
+   `model.py` convierte tipos e imputa valores faltantes antes de enviar
+   el registro al pipeline.
+
+3. FastAPI permite exponer la inferencia como un servicio HTTP mediante
+   endpoints como `/health` y `/predict`; Uvicorn ejecuta ese servicio.
+
+4. El endpoint `/health` es útil para confirmar disponibilidad y
+   verificar qué artefacto del modelo está utilizando el servicio
+   mediante su checksum SHA-256.
+
+5. Docker permite empaquetar Python, dependencias bloqueadas, el modelo
+   congelado y la API en una imagen reproducible.
+
+6. Ejecutar la misma predicción localmente, mediante FastAPI y dentro
+   del contenedor permite comprobar consistencia entre desarrollo y
+   despliegue.
+
+
+==================================================
+AUDITORÍA DE CIERRE — 26-10-2026
+==================================================
+
+Esta sección complementa las evidencias originales anteriores; no las
+reemplaza.
+
+Verificaciones repetidas desde este directorio:
+
+- `uv lock --check` resolvió el entorno bloqueado sin modificar `uv.lock`.
+- `uv run python smoke_test.py` devolvió
+  `{'conversion_probability': 0.769799, 'conversion': True}`.
+- `uv run python q3.py` devolvió `Conversion probability: 0.533`.
+- La API local respondió con `0.769799` para el lead de Q4 y sus checksums
+  coincidieron con `model_metadata.json`.
+- La imagen `zoomcamp-model:2026-hw5-audit` se construyó y, publicada
+  temporalmente en el puerto local 9697, devolvió `0.769799` para Q6. Su
+  endpoint `/health` expuso los hashes esperados.
+
+Contraste con el enunciado oficial actual de la cohorte 2026:
+
+- Q1 es una comprobación de entorno y no una respuesta calificada; la versión
+  local registrada sigue siendo `uv 0.13.5`.
+- Q2--Q6 usan las entradas, el redondeo a tres decimales y las condiciones
+  solicitadas por el enunciado. Las respuestas documentadas son consistentes
+  con los scripts y con las ejecuciones repetidas.
+- El enunciado oficial actual también incluye una sección opcional de
+  “Learning in Public”. No existe evidencia de una publicación de ese tipo en
+  este directorio, por lo que no se declara como realizada.
+
+Archivos locales no publicados:
+
+- `.venv/` y `__pycache__/` están excluidos por `.gitignore`.
+- No se detectaron credenciales en los archivos candidatos de Homework 5.
