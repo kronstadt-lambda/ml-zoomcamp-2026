@@ -1,5 +1,6 @@
 # Python-generated files
 __pycache__/
+.git
 *.py[oc]
 *$py.class
 build/

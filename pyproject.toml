@@ -16,6 +16,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+deployment = [
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
+]
 dev = [
     "debugpy>=1.8.22",
     "pytest>=9.1.1",
